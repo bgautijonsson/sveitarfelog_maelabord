@@ -1,0 +1,14 @@
+name: maelabord_arsreikninga_sveitarfelaga
+title: maelabord_arsreikninga_sveitarfelaga
+username:
+account: bgautijonsson
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6192503
+bundleId: 5919254
+url: https://bggj.shinyapps.io/maelabord_arsreikninga_sveitarfelaga/
+when: 1652883703.88805
+lastSyncTime: 1652883703.88806
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: R/.DS_Store|README.md

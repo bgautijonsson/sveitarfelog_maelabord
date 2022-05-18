@@ -58,8 +58,8 @@ make_x_scale <- function(y_name) {
         "Eiginfjárhlutfall" = scale_x_continuous(labels = label_percent()),
         "Framlegð per íbúi (kjörtímabil í heild)" = scale_x_continuous(label = label_number(suffix = " kr")),
         "Framlegð sem hlutfall af tekjum (kjörtímabil í heild)" = scale_x_continuous(labels = label_percent()),
-        "Handbært fé per íbúi" = scale_x_continuous(label = label_number(suffix = " kr"), trans = pseudo_log_trans(base = 10),
-                                                    breaks = c(1e1, 1e2, 1e3, 1e4, 1e5, 1e6)),
+        "Handbært fé per íbúi" = scale_x_continuous(label = label_number(suffix = " kr"), 
+                                                    breaks = c(0, 5e5, 1e6, 2e6, 3e6)),
         "Jöfnunarsjóðsframlög per íbúi" = scale_x_continuous(label = label_number(suffix = " kr"), limits = c(0, NA), expand = expansion()),
         "Jöfnunarsjóðsframlög sem hlutfall af skatttekjum" = scale_x_continuous(labels = label_percent(), limits = c(0, NA), expand = expansion()),
         "Launa- og launatengd gjöld per íbúi" = scale_x_continuous(label = label_number(suffix = " kr"), limits = c(0, NA), expand = expansion()),
@@ -157,7 +157,7 @@ make_hlines <- function(y_name) {
     }
 }
 
-make_vline_and_segments <- function(y_name, vidmid, plot_dat) {
+make_vline_and_segments <- function(y_name) {
     vlines <- list(
         "Eiginfjárhlutfall" = 0,
         "Skuldir per íbúi" = 0,
@@ -186,10 +186,7 @@ make_vline_and_segments <- function(y_name, vidmid, plot_dat) {
         return(
             list(
                 geom_vline(xintercept = vlines[[y_name]], lty = 2, alpha = 0.5),
-                geom_segment(data = plot_dat |> filter(!str_detect(sveitarfelag, str_c(vidmid, "|Heild"))),
-                             aes(xend = vlines[[y_name]], yend = sveitarfelag), size = 0.3),
-                geom_segment(data = plot_dat |> filter(str_detect(sveitarfelag, str_c(vidmid, "|Heild"))),
-                             aes(xend = vlines[[y_name]], yend = sveitarfelag, col = factor(my_colour)), size = 0.3)
+                geom_segment(aes(xend = vlines[[y_name]], yend = sveitarfelag, col = factor(my_colour)), size = 0.3)
             )
         )
     }

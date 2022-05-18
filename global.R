@@ -27,7 +27,7 @@ sidebar_info <- paste0(
     br(" "),
     h5("Höfundur:"),
     p("Brynjólfur Gauti Guðrúnar Jónsson"),
-    HTML("<a href='https://github.com/bgautijonsson/maelabord_arsreikninga_sveitarfelaga'> Kóði og gögn </a>")
+    HTML("<a href='https://github.com/bgautijonsson/sveitarfelog_maelabord'> Kóði og gögn </a>")
 )
 # This is the caption for plots
 caption <- "Mynd var fengin frá: https://bggj.shinyapps.io/maelabord_arsreikninga_sveitarfelaga/"

@@ -107,16 +107,13 @@ dreifing_server <- function(id) {
             
             x_scale <- make_x_scale(input$y_var)
             subtitles <- make_subtitles(input$y_var)
-            vline_and_segments <- make_vline_and_segments(input$y_var, input$vidmid, plot_dat)
+            vline_and_segments <- make_vline_and_segments(input$y_var)
             coords <- make_coords_dreifing(input$y_var, plot_dat$y)
             
             p <- plot_dat |> 
                 ggplot(aes(y, sveitarfelag)) +
                 vline_and_segments + 
-                geom_point(data = plot_dat |> filter(!str_detect(sveitarfelag, str_c(input$vidmid, "|Heild"))),
-                           aes(size = factor(my_colour))) +
-                geom_point(data = plot_dat |> filter(str_detect(sveitarfelag, str_c(input$vidmid, "|Heild"))),
-                           aes(col = factor(my_colour), size = factor(my_colour))) +
+                geom_point(aes(col = factor(my_colour), size = factor(my_colour))) +
                 x_scale +
                 scale_colour_manual(values = c("#525252", "#2171b5", "#b2182b")) +
                 scale_size_manual(values = c(2, 4, 4)) +
@@ -127,7 +124,7 @@ dreifing_server <- function(id) {
                 labs(x = NULL,
                      y = NULL,
                      col = NULL,
-                     title = input$y_var,
+                     title = str_c(input$y_var, " (", input$hluti, ")"),
                      subtitle = subtitles,
                      caption = "Mynd var fengin frá: https://bggj.shinyapps.io/maelabord_arsreikninga_sveitarfelaga/")
             
