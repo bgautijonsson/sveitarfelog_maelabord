@@ -8,4 +8,7 @@ function(input, output) {
     
     ##### VIÐMIÐ #####
     vidmid_server("vidmid")
+    
+    ##### Fasteignagjöld #####
+    fasteignagjold_haekkun_server("fasteignagjold")
 }

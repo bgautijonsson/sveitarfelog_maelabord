@@ -14,3 +14,12 @@ Fyrir úrvinnslu tengdri viðmiðum eftirlitsnefndar með fjármálum sveitarfé
 # Gögn
 
 Tilbúið gagnasafn er í möppunni **data** undir nafninu **arsreikningagogn.csv**.
+
+
+## Fasteignagjöld
+
+Fyrir útreikninga tengda fasteignagjöldum nota ég [gögn frá Sambandi Íslenskra Sveitarfélaga um fasteignaskatt](https://www.samband.is/verkefnin/fjarmal/tekjustofnar-sveitarfelaga/fasteignaskattur/)
+
+### Hækkun fasteignagjalda út frá fasteignamati
+
+Hérna sæki ég bara þá hluta af fasteignagjöldum sem eru tengdir fasteignamati fyrir hvert sveitarfélag, legg þessi hlutföll saman og margfalda svo við hækkunina sem er slegin inn í mælaborðið.

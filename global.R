@@ -17,7 +17,27 @@ library(bslib)
 library(thematic)
 
 ##### Data #####
+# Ársreikningagögn
 d <- read_csv("data/arsreikningagogn.csv") 
+
+
+
+# Fasteignagjöld
+fasteignamat <- read_excel("data/tafla-14-fasteignagjold-2022.xlsx", skip = 5) |> 
+    slice(-1) |> 
+    set_names(c("nr", "sveitarfelag", "utsvar", "fskattur_a", "fskattur_b", "fskattur_c", 
+                "fraveitugjald", "vatnsgjald", "sorphreinsunargjald",
+                "sorpeydingargjald", "lodaleiga_ibudir", "lodaleiga_fyrirtaeki", "fj_gjd")) |> 
+    mutate(sveitarfelag = str_replace_all(sveitarfelag, "[0-9]+\\)", "") |> 
+               str_replace_all("1 \\)", "") |> 
+               str_squish()) |> 
+    drop_na(nr) |> 
+    select(sveitarfelag, fskattur_a, fraveitugjald, vatnsgjald) |> 
+    mutate_at(vars(fskattur_a, fraveitugjald, vatnsgjald), ~ ifelse(str_detect(., "kr/m2") | is.na(.), "0", as.character(.)) |> 
+                  str_replace(",,", "\\.") |> 
+                  parse_number()) |> 
+    mutate(fasteignamat = (fskattur_a + fraveitugjald + vatnsgjald) / 100) |> 
+    select(sveitarfelag, fasteignamat)
 
 
 ##### Sidebar Info and Plot Captions #####

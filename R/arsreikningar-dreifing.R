@@ -217,7 +217,39 @@ dreifing_server <- function(id) {
         
         output$dreifing_tafla <- renderDT({
             
-            dreifing_tafla()
+            datatable(
+                fasteigna_alogur,
+                extensions = "Buttons",
+                rownames = FALSE,
+                caption = htmltools::tags$caption(
+                    style = "caption-side: top",
+                    h4(caption)
+                ),
+                options = list(
+                    dom = "fBrtip",
+                    buttons = c("csv", "excel", "pdf"),
+                    pageLength = 68,
+                    lengthChange = FALSE,
+                    searching = TRUE,
+                    autoWidth = TRUE,
+                    captionSide = "top",
+                    language = list(
+                        decimal = ",",
+                        thousands = ".",
+                        url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Icelandic.json'
+                    )
+                )
+            ) |> 
+                formatStyle(
+                    target = 'row', columns = 'Sveitarfélag',  
+                    backgroundColor = styleEqual(input$vidmid, c("#2171b5")),
+                    color = styleEqual(input$vidmid, "#ffffff")
+                ) |> 
+                formatStyle(
+                    target = 'row', columns = 'Sveitarfélag',  
+                    backgroundColor = styleEqual("Heild", c("#b2182b")),
+                    color = styleEqual("Heild", "#ffffff")
+                )
         })
     })
 }
