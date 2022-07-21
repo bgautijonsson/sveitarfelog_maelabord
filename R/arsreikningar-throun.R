@@ -74,7 +74,8 @@ throun_ui <- function(id) {
         mainPanel(
             tabsetPanel(
                 type = "tabs",
-                tabPanel("Myndrit", plotOutput(NS(id, "throun_plot"), height = 500)),
+                tabPanel("Myndrit", 
+                         plotlyOutput(NS(id, "throun_plot"), height = 700, width = "100%")),
                 tabPanel("Tafla", DTOutput(NS(id, "throun_tafla")))
             )
             
@@ -90,6 +91,10 @@ throun_ui <- function(id) {
 throun_server <- function(id) {
     moduleServer(id, function(input, output, session) {
         
+        # to relay the height/width of the plot's container, we'll query this 
+        # session's client data http://shiny.rstudio.com/articles/client-data.html
+        cdata <- session$clientData
+        
         ##### Make the dataframe used in the plot and table ######
         
         throun_df <- eventReactive(input$goButton, {
@@ -101,7 +106,9 @@ throun_server <- function(id) {
                        sveitarfelag %in% input$sveitarfelag,
                        ar >= input$ar_fra) |> 
                 select(ar, sveitarfelag, y = all_of(y_var), visitala_2021) |> 
-                mutate(x = ar) |> 
+                mutate(x = ar,
+                       tooltip = text_tooltip_throun(sveitarfelag, y, ar, input$y_var),
+                       sveitarfelag = str_c(sveitarfelag, "     ")) |> 
                 adjust_for_inflation(input$y_var, input$verdlag, input$ar_fra)
             
             plot_dat
@@ -120,9 +127,14 @@ throun_server <- function(id) {
             coords <- make_coords(input$y_var, plot_dat$y)
             
             p <- plot_dat |> 
-                ggplot(aes(ar, y, col = sveitarfelag)) +
+                ggplot(aes(ar, y, group = sveitarfelag, col = sveitarfelag, text = tooltip)) +
                 hlines +
                 geom_line() +
+                # geom_text(data = plot_dat |> 
+                #               group_by(sveitarfelag) |> 
+                #               filter(ar == max(ar)) |> 
+                #               ungroup(),
+                #           aes(label = sveitarfelag), hjust = 1, nudge_x = 0.2) +
                 geom_point() +
                 scale_x_continuous() +
                 y_scale +
@@ -199,8 +211,40 @@ throun_server <- function(id) {
             
         })
         
-        output$throun_plot <- renderPlot({
-            throun_plot()
+
+        
+        output$throun_plot <- renderPlotly({
+            ggplotly(
+                throun_plot(),
+                tooltip = "text",
+                height = 600,
+                width = 1000
+            ) |> 
+                layout(
+                    legend = list(
+                        orientation = "h",
+                        yanchor = "bottom",
+                        y = 1.02, 
+                        x = 0
+                    ),
+                    title = list(
+                        y = 0.95, yanchor = "top",
+                        x = 0, xref = "paper"
+                    ),
+                    margin = list(
+                        t = 105,
+                        r = 0,
+                        b = 120,
+                        l = 0
+                    ),
+                    autosize = FALSE,
+                    annotations = list(
+                        list(x = 0.8, xanchor = "right", xref = "paper",
+                             y = -0.15, yanchor = "bottom", yref = "paper",
+                             showarrow = FALSE,
+                             text = caption)
+                    )
+                )
         })
         
         output$throun_tafla <- renderDT({

@@ -1,9 +1,22 @@
 ui <- navbarPage("Mælaborð sveitarfélaga",
                  theme = light,
+                 selected = "Forsíða",
                  
                  tabPanel(
-                     title = "Fasteignagjöld",
-                     fasteignagjold_haekkun_ui("fasteignagjold")
+                     title = "Forsíða",
+                     forsida_ui("forsida")
+                 ),
+                 
+                 navbarMenu(
+                     title = "Fasteignir",
+                     tabPanel(
+                         title = "Fasteignagjöld",
+                         fasteignir_fasteignagjold_ui("fasteignagjold")
+                     ),
+                     tabPanel(
+                         title = "Kaupverð nýrra fasteigna",
+                         fasteignir_kaupverd_ui("fasteignaverd")
+                     )
                  ),
                  navbarMenu(
                      title = "Ársreikningar",

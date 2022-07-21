@@ -4,10 +4,31 @@ text_tooltip_dreifing <- function(sveitarfelag, y) {
     )
 }
 
-text_tooltip_throun <- function(sveitarfelag, y, ar) {
+text_tooltip_throun <- function(sveitarfelag, y, ar, y_name) {
     paste0(
-        sveitarfelag," (", ar,"): ", number(y, big.mark = ".", decimal.mark = ",", accuracy = 0.01)
+        sveitarfelag," (", ar,"): ", format_number(y_name, y)
     )
+}
+
+text_tooltip_vidmid <- function(sveitarfelag, y_var, ar, obs, vidmid) {
+    ifelse(
+        y_var == "nettoskuldir",
+        paste0(
+            sveitarfelag," (", ar,"): ", percent(obs, accuracy = 0.1)
+        ),
+        paste0(
+            sveitarfelag," (", ar,"): ", percent(obs, accuracy = 0.1), " (Viðmið: ", percent(vidmid, accuracy = 0.1), ")"
+        )
+    )
+}
+
+format_number <- function(y_name, y) {
+    if (y_name %in% percent_vars) {
+        percent(y, big.mark = ".", decimal.mark = ",", accuracy = 1)
+        
+    } else {
+        number(y, big.mark = ".", decimal.mark = ",", accuracy = 1)
+    }
 }
 
 

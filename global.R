@@ -1,4 +1,5 @@
 library(shiny)
+library(plotly)
 library(cowplot)
 library(tidyverse)
 library(scales)
@@ -11,10 +12,10 @@ library(ggtext)
 library(here)
 library(readxl)
 library(janitor)
-library(plotly)
 library(DT)
 library(bslib)
 library(thematic)
+
 
 ##### Data #####
 # Ársreikningagögn
@@ -32,12 +33,23 @@ fasteignamat <- read_excel("data/tafla-14-fasteignagjold-2022.xlsx", skip = 5) |
                str_replace_all("1 \\)", "") |> 
                str_squish()) |> 
     drop_na(nr) |> 
-    select(sveitarfelag, fskattur_a, fraveitugjald, vatnsgjald) |> 
-    mutate_at(vars(fskattur_a, fraveitugjald, vatnsgjald), ~ ifelse(str_detect(., "kr/m2") | is.na(.), "0", as.character(.)) |> 
-                  str_replace(",,", "\\.") |> 
-                  parse_number()) |> 
-    mutate(fasteignamat = (fskattur_a + fraveitugjald + vatnsgjald) / 100) |> 
-    select(sveitarfelag, fasteignamat)
+    select(-utsvar, -fskattur_b, -sorphreinsunargjald, -sorpeydingargjald, -fj_gjd, -lodaleiga_fyrirtaeki, -nr, -lodaleiga_ibudir) |> 
+    rename("Íbúðarhúsnæði" = "fskattur_a", "Atvinnueignir" = "fskattur_c") |> 
+    pivot_longer(c("Íbúðarhúsnæði", "Atvinnueignir"), names_to = "tegund_eigna", values_to = "fskattur") |> 
+    mutate_at(
+        vars(fskattur, fraveitugjald, vatnsgjald), 
+        ~ ifelse(str_detect(., "kr/m2") | is.na(.), "0", as.character(.)) |> 
+            str_replace(",,", "\\.") |> 
+            parse_number()
+    ) |> 
+    mutate(fasteignamat = (fskattur + fraveitugjald + vatnsgjald) / 100) |> 
+    select(sveitarfelag, tegund_eigna, fasteignamat)
+
+
+# Kaupskrá fasteigna
+kaupskra <- read_csv("data/kaupskra.csv")
+
+
 
 
 ##### Sidebar Info and Plot Captions #####
@@ -50,13 +62,13 @@ sidebar_info <- paste0(
     HTML("<a href='https://github.com/bgautijonsson/sveitarfelog_maelabord'> Kóði og gögn </a>")
 )
 # This is the caption for plots
-caption <- "Mynd var fengin frá: https://bggj.shinyapps.io/maelabord_arsreikninga_sveitarfelaga/"
+caption <- "Mynd var fengin frá: https://www.bggj.is/sveitarfelog"
 
 ##### THEMES #####
 # Making a light and dark theme in case I want to offer the option later
-light <- bs_theme(bootswatch = "flatly")
+light <- bs_theme(bootswatch = "flatly", primary = "#08306b")
 dark <- bs_theme(bootswatch = "superhero")
-theme_set(theme_half_open(font_size = 16))
+theme_set(theme_half_open(font_size = 12))
 thematic_shiny()
 
 ##### List of all outcome variables #####
@@ -88,4 +100,22 @@ y_vars <- list(
     "Útsvar og fasteignaskattur per íbúi" = "skattur_a_ibua",
     "Veltufé frá rekstri sem hlutfall af tekjum" = "veltufe_hlutf_tekjur",
     "Veltufjárhlutfall" = "veltufjarhlutfall"
+)
+
+percent_vars <- c(
+    "Eiginfjárhlutfall",
+    "Framlegð sem hlutfall af tekjum",
+    "Framlegð sem hlutfall af tekjum (kjörtímabil í heild)",
+    "Jöfnunarsjóðsframlög sem hlutfall af skatttekjum",
+    "Launa- og launatengd gjöld sem hlutfall af útgjöldum",
+    "Nettóskuldir sem hlutfall af tekjum",
+    "Rekstrarniðurstaða sem hlutfall af tekjum",
+    "Rekstrarniðurstaða sem hlutfall af tekjum (kjörtímabil í heild)",
+    "Rekstrarniðurstaða undanfarinna 3 ára  sem hlutfall af tekjum",
+    "Skuldir sem hlutfall af tekjum",
+    "Skuldaaukning",
+    "Skuldaaukning á kjörtímabili (leiðrétt fyrir verðbólgu)",
+    "Skuldahlutfall",
+    "Veltufé frá rekstri sem hlutfall af tekjum",
+    "Veltufjárhlutfall"
 )

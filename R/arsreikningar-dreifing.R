@@ -62,7 +62,7 @@ dreifing_ui <- function(id) {
                      h3("Tölur miða við síðasta aðgengilega ársreikning sveitarfélags"),
                      br(" "),
                      tabsetPanel(
-                         tabPanel("Myndrit", plotOutput(NS(id, "dreifing_plot"), height = 1200)),
+                         tabPanel("Myndrit", plotlyOutput(NS(id, "dreifing_plot"), height = 1200, width = "100%")),
                          tabPanel("Tafla", DTOutput(NS(id, "dreifing_tafla")))
                      )
                  )
@@ -99,7 +99,7 @@ dreifing_server <- function(id) {
             
             plot_dat <- dreifing_df() |> 
                 mutate(my_colour = 1 * (sveitarfelag %in% input$vidmid) + 2 * (sveitarfelag == "Heild"),
-                       text = text_tooltip_dreifing(sveitarfelag, y),
+                       text = text_tooltip_throun(sveitarfelag, y, ar, input$y_var),
                        sveitarfelag = case_when(sveitarfelag == input$vidmid ~ str_c("<b style='color:#2171b5'>", sveitarfelag, " (Til ", ar, ")", "</b>"),
                                                 sveitarfelag == "Heild" ~ str_c("<b style='color:#b2182b'>", sveitarfelag, " (Til ", ar, ")", "</b>"),
                                                 TRUE ~ str_c(sveitarfelag, " (Til ", ar, ")")),
@@ -111,7 +111,7 @@ dreifing_server <- function(id) {
             coords <- make_coords_dreifing(input$y_var, plot_dat$y)
             
             p <- plot_dat |> 
-                ggplot(aes(y, sveitarfelag)) +
+                ggplot(aes(y, sveitarfelag, text = text)) +
                 vline_and_segments + 
                 geom_point(aes(col = factor(my_colour), size = factor(my_colour))) +
                 x_scale +
@@ -126,7 +126,7 @@ dreifing_server <- function(id) {
                      col = NULL,
                      title = str_c(input$y_var, " (", input$hluti, ")"),
                      subtitle = subtitles,
-                     caption = "Mynd var fengin frá: https://bggj.shinyapps.io/maelabord_arsreikninga_sveitarfelaga/")
+                     caption = caption)
             
            p
             
@@ -135,8 +135,33 @@ dreifing_server <- function(id) {
             bindCache(input$y_var, input$hluti, input$vidmid) |> 
             bindEvent(input$goButton)
         
-        output$dreifing_plot <- renderPlot({
-            dreifing_plot()
+        output$dreifing_plot <- renderPlotly({
+            ggplotly(
+                dreifing_plot(),
+                tooltip = "text",
+                height = 1200,
+                width = 1000
+            ) |> 
+                layout(
+                    title = list(
+                        y = 0.95, yanchor = "top",
+                        x = 0, xref = "paper"
+                    ),
+                    margin = list(
+                        t = 105,
+                        r = 0,
+                        b = 110,
+                        l = 0
+                    ),
+                    autosize = FALSE,
+                    annotations = list(
+                        list(x = 1, xanchor = "right", xref = "paper",
+                             y = -0.05, yanchor = "bottom", yref = "paper",
+                             showarrow = FALSE,
+                             text = caption)
+                    )
+                )
+            
         })
         
         dreifing_tafla <- eventReactive(input$goButton, {
@@ -173,6 +198,7 @@ dreifing_server <- function(id) {
                 select(sveitarfelag, ar, y) |> 
                 arrange(desc(y)) |> 
                 mutate(y = round(y, digits = my_digits[[input$y_var]]),
+                       y = format_number(y_name, y),
                        nr = str_c(str_pad(row_number(), width = 2, side = "left", pad = "0"), "/", n())) |> 
                 select(nr, sveitarfelag, ar, y) |> 
                 rename(Röðun = nr, Sveitarfélag = sveitarfelag, "Síðasti ársreikningur" = ar, !!y_name := y)
@@ -217,39 +243,7 @@ dreifing_server <- function(id) {
         
         output$dreifing_tafla <- renderDT({
             
-            datatable(
-                fasteigna_alogur,
-                extensions = "Buttons",
-                rownames = FALSE,
-                caption = htmltools::tags$caption(
-                    style = "caption-side: top",
-                    h4(caption)
-                ),
-                options = list(
-                    dom = "fBrtip",
-                    buttons = c("csv", "excel", "pdf"),
-                    pageLength = 68,
-                    lengthChange = FALSE,
-                    searching = TRUE,
-                    autoWidth = TRUE,
-                    captionSide = "top",
-                    language = list(
-                        decimal = ",",
-                        thousands = ".",
-                        url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Icelandic.json'
-                    )
-                )
-            ) |> 
-                formatStyle(
-                    target = 'row', columns = 'Sveitarfélag',  
-                    backgroundColor = styleEqual(input$vidmid, c("#2171b5")),
-                    color = styleEqual(input$vidmid, "#ffffff")
-                ) |> 
-                formatStyle(
-                    target = 'row', columns = 'Sveitarfélag',  
-                    backgroundColor = styleEqual("Heild", c("#b2182b")),
-                    color = styleEqual("Heild", "#ffffff")
-                )
+            dreifing_tafla()
         })
     })
 }

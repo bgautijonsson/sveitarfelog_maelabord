@@ -4,3 +4,5 @@
 .httr-oauth
 .DS_Store
 rsconnect/
+**/* 2.*
+**/* 2
