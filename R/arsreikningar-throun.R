@@ -4,6 +4,7 @@ throun_ui <- function(id) {
     sidebarLayout(
         sidebarPanel(
             width = 3,
+            tags$style(type="text/css", "body {padding-top: 80px; padding-bottom: 80px}"),
             selectInput(
                 inputId = NS(id, "sveitarfelag"),
                 label = "Sveitarfélag",
@@ -75,7 +76,7 @@ throun_ui <- function(id) {
             tabsetPanel(
                 type = "tabs",
                 tabPanel("Myndrit", 
-                         plotlyOutput(NS(id, "throun_plot"), height = 700, width = "100%")),
+                         plotlyOutput(NS(id, "throun_plot"), height = 700, width = "100%") |> withSpinner()),
                 tabPanel("Tafla", DTOutput(NS(id, "throun_tafla")))
             )
             
@@ -97,7 +98,7 @@ throun_server <- function(id) {
         
         ##### Make the dataframe used in the plot and table ######
         
-        throun_df <- eventReactive(input$goButton, {
+        throun_df <- reactive({
             
             y_var <- ui_name_to_data_name(input$y_var)
             
@@ -117,7 +118,7 @@ throun_server <- function(id) {
         
         ##### Plot #####
         
-        throun_plot <- eventReactive(input$goButton, {
+        throun_plot <- reactive({
             
             plot_dat <- throun_df()
             
@@ -148,7 +149,7 @@ throun_server <- function(id) {
                      subtitle = subtitles,
                      caption = caption)
             p
-        })
+        }) 
         
         ##### Table #####
         throun_tafla <- eventReactive(input$goButton, {
@@ -245,11 +246,22 @@ throun_server <- function(id) {
                              text = caption)
                     )
                 )
-        })
+        }) |> 
+            bindCache(input$sveitarfelag, 
+                      input$ar_fra, 
+                      input$hluti,
+                      input$y_var,
+                      input$verdlag) |> 
+            bindEvent(input$goButton, ignoreNULL = FALSE)
+        
+        outputOptions(output, "throun_plot", suspendWhenHidden = FALSE)
         
         output$throun_tafla <- renderDT({
             
             throun_tafla()
-        })
+        }) |> 
+            bindEvent(input$goButton, ignoreNULL = FALSE)
+        
+        outputOptions(output, "throun_tafla", suspendWhenHidden = FALSE)
     })
 }

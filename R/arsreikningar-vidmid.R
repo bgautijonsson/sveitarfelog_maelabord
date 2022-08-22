@@ -3,6 +3,7 @@ vidmid_ui <- function(id) {
     sidebarLayout(
         sidebarPanel(
             width = 3,
+            tags$style(type="text/css", "body {padding-top: 80px;}"),
             selectInput(
                 inputId = NS(id, "sveitarfelag"),
                 label = "Sveitarfélag",
@@ -32,7 +33,7 @@ vidmid_ui <- function(id) {
         
         
         mainPanel(
-            plotlyOutput(NS(id, "plot_vidmid"), height = 1200, width = 1200)
+            plotlyOutput(NS(id, "plot_vidmid"), height = 1200, width = 1200) |> withSpinner()
         )
     )
     
@@ -41,7 +42,7 @@ vidmid_ui <- function(id) {
 vidmid_server <-function(id) {
     moduleServer(id, function(input, output, session) {
         
-        my_plot_vidmid <- eventReactive(input$goButton, {
+        my_plot_vidmid <- reactive({
             
             fjarf_skuldir_function <- function(x) {
                 case_when(
@@ -102,9 +103,9 @@ vidmid_server <-function(id) {
                       panel.spacing.y = unit(0.02, units= "npc"),
                       strip.placement = "outside",
                       strip.text = element_text(margin = margin(t = 5, r = 10, b = 5, l = 10), 
-                                                  hjust = 0.5,
-                                                  vjust = 0.5, 
-                                                  size = 10)) +
+                                                hjust = 0.5,
+                                                vjust = 0.5, 
+                                                size = 10)) +
                 labs(x = NULL,
                      y = NULL,
                      title = str_c("Hvernig gengur sveitarfélögum að standast viðmið Eftirlitsnefndar með fjármálum sveitarfélaga (", input$hluti,")?"),
@@ -144,6 +145,11 @@ vidmid_server <-function(id) {
                              text = caption)
                     )
                 ) 
-        })
+        }) |> 
+            bindCache(input$sveitarfelag, 
+                      input$hluti) |> 
+            bindEvent(input$goButton, ignoreNULL = FALSE)
+        
+        outputOptions(output, "plot_vidmid", suspendWhenHidden = FALSE)
     })
 }

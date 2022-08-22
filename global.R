@@ -15,41 +15,13 @@ library(janitor)
 library(DT)
 library(bslib)
 library(thematic)
+library(shinycssloaders)
 
+shinyOptions(plot.autocolor = TRUE)
 
 ##### Data #####
 # Ársreikningagögn
 d <- read_csv("data/arsreikningagogn.csv") 
-
-
-
-# Fasteignagjöld
-fasteignamat <- read_excel("data/tafla-14-fasteignagjold-2022.xlsx", skip = 5) |> 
-    slice(-1) |> 
-    set_names(c("nr", "sveitarfelag", "utsvar", "fskattur_a", "fskattur_b", "fskattur_c", 
-                "fraveitugjald", "vatnsgjald", "sorphreinsunargjald",
-                "sorpeydingargjald", "lodaleiga_ibudir", "lodaleiga_fyrirtaeki", "fj_gjd")) |> 
-    mutate(sveitarfelag = str_replace_all(sveitarfelag, "[0-9]+\\)", "") |> 
-               str_replace_all("1 \\)", "") |> 
-               str_squish()) |> 
-    drop_na(nr) |> 
-    select(-utsvar, -fskattur_b, -sorphreinsunargjald, -sorpeydingargjald, -fj_gjd, -lodaleiga_fyrirtaeki, -nr, -lodaleiga_ibudir) |> 
-    rename("Íbúðarhúsnæði" = "fskattur_a", "Atvinnueignir" = "fskattur_c") |> 
-    pivot_longer(c("Íbúðarhúsnæði", "Atvinnueignir"), names_to = "tegund_eigna", values_to = "fskattur") |> 
-    mutate_at(
-        vars(fskattur, fraveitugjald, vatnsgjald), 
-        ~ ifelse(str_detect(., "kr/m2") | is.na(.), "0", as.character(.)) |> 
-            str_replace(",,", "\\.") |> 
-            parse_number()
-    ) |> 
-    mutate(fasteignamat = (fskattur + fraveitugjald + vatnsgjald) / 100) |> 
-    select(sveitarfelag, tegund_eigna, fasteignamat)
-
-
-# Kaupskrá fasteigna
-kaupskra <- read_csv("data/kaupskra.csv")
-
-
 
 
 ##### Sidebar Info and Plot Captions #####
@@ -67,7 +39,7 @@ caption <- "Mynd var fengin frá: https://www.bggj.is/sveitarfelog"
 ##### THEMES #####
 # Making a light and dark theme in case I want to offer the option later
 light <- bs_theme(bootswatch = "flatly", primary = "#08306b")
-dark <- bs_theme(bootswatch = "superhero")
+dark <- bs_theme(bootswatch = "superhero", primary = "#08306b")
 theme_set(theme_half_open(font_size = 12))
 thematic_shiny()
 

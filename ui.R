@@ -1,38 +1,20 @@
-ui <- navbarPage("Mælaborð sveitarfélaga",
+ui <- navbarPage("Ársreikningar sveitarfélaga",
                  theme = light,
-                 selected = "Forsíða",
-                 
+                 position = "fixed-top",
+
                  tabPanel(
-                     title = "Forsíða",
-                     forsida_ui("forsida")
+                     title = "Þróun",
+                     throun_ui("throun"), 
                  ),
-                 
-                 navbarMenu(
-                     title = "Fasteignir",
-                     tabPanel(
-                         title = "Fasteignagjöld",
-                         fasteignir_fasteignagjold_ui("fasteignagjold")
-                     ),
-                     tabPanel(
-                         title = "Kaupverð nýrra fasteigna",
-                         fasteignir_kaupverd_ui("fasteignaverd")
-                     )
+                 tabPanel(
+                     title = "Dreifing",
+                     dreifing_ui("dreifing")
                  ),
-                 navbarMenu(
-                     title = "Ársreikningar",
-                     tabPanel(
-                         title = "Þróun",
-                         throun_ui("throun"), 
-                     ),
-                     tabPanel(
-                         title = "Dreifing",
-                         dreifing_ui("dreifing")
-                     ),
-                     tabPanel(
-                         title = "Viðmið",
-                         vidmid_ui("vidmid")
-                     )
+                 tabPanel(
+                     title = "Viðmið",
+                     vidmid_ui("vidmid")
                  )
+
                  
                  
 )
