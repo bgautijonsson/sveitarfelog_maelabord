@@ -243,4 +243,29 @@ make_coords_dreifing <- function(y_name, y) {
 
 
 
+get_digits_yvar <- function(y_name) {
+    my_digits <- list(
+        "Eiginfjárhlutfall" = 3,
+        "Framlegð sem hlutfall af tekjum" = 3,
+        "Handbært fé per íbúi" = 0,
+        "Jöfnunarsjóðsframlög per íbúi" = 0,
+        "Jöfnunarsjóðsframlög sem hlutfall af skatttekjum" = 3,
+        "Launa- og launatengd gjöld per íbúi" = 0,
+        "Launa- og launatengd gjöld sem hlutfall af útgjöldum" = 3,
+        "Nettó jöfnunarsjóðsframlög per íbúi" = 0,
+        "Nettóskuldir sem hlutfall af tekjum" = 3,
+        "Rekstrarniðurstaða sem hlutfall af tekjum" = 3,
+        "Skuldir per íbúi"  = 0,
+        "Skuldir sem hlutfall af tekjum" = 3,
+        "Skuldaaukning" = 3,
+        "Skuldahlutfall" = 3,
+        "Útsvar og fasteignaskattur per íbúi" = 0,
+        "Veltufé frá rekstri sem hlutfall af tekjum" = 3,
+        "Veltufjárhlutfall" = 3
+    )
+    
+    if (is.null(my_digits[[y_name]])) my_digits[[y_name]] <- 0
+    
+    my_digits[[y_name]]
+}
 

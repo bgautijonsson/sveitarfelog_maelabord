@@ -16,12 +16,13 @@ library(DT)
 library(bslib)
 library(thematic)
 library(shinycssloaders)
+library(feather)
 
 shinyOptions(plot.autocolor = TRUE)
 
 ##### Data #####
 # Ársreikningagögn
-d <- read_csv("data/arsreikningagogn.csv") 
+d <- read_feather("data/arsreikningagogn.feather") 
 
 
 ##### Sidebar Info and Plot Captions #####
