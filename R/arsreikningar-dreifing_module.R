@@ -6,7 +6,6 @@ dreifing_ui <- function(id) {
              sidebarLayout(
                  sidebarPanel(
                      width = 3,
-                     tags$style(type="text/css", "body {padding-top: 80px;}"),
                      selectInput(
                          inputId = NS(id, "vidmid"),
                          label = "Sveitarfélag til viðmiðunar",
@@ -60,8 +59,6 @@ dreifing_ui <- function(id) {
                  
                  
                  mainPanel(
-                     h3("Tölur miða við síðasta aðgengilega ársreikning sveitarfélags"),
-                     br(" "),
                      tabsetPanel(
                          tabPanel("Myndrit", plotlyOutput(NS(id, "dreifing_plot"), height = 1200, width = "100%") |> withSpinner()),
                          tabPanel("Tafla", DTOutput(NS(id, "dreifing_tafla")))
@@ -96,7 +93,7 @@ dreifing_server <- function(id) {
         
         output$dreifing_plot <- renderPlotly({
             dreifing_plot() |> 
-                make_dreifing_ggplotly(input =)
+                make_dreifing_ggplotly(input)
             
         }) |> 
             bindCache(input$y_var, input$hluti, input$vidmid) |> 

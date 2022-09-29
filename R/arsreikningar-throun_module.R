@@ -4,7 +4,6 @@ throun_ui <- function(id) {
     sidebarLayout(
         sidebarPanel(
             width = 3,
-            tags$style(type="text/css", "body {padding-top: 80px; padding-bottom: 80px}"),
             selectInput(
                 inputId = NS(id, "sveitarfelag"),
                 label = "Sveitarfélag",
@@ -58,8 +57,8 @@ throun_ui <- function(id) {
             selectInput(
                 inputId = NS(id, "verdlag"),
                 label = "Verðlag",
-                choices = c("Verðlag hvers árs", "Verðlag 2021"),
-                selected = "Verðlag 2021"
+                choices = c("Verðlag hvers árs", "Fast verðlag"),
+                selected = "Fast verðlag"
             ),
             div(
                 actionButton(
@@ -74,10 +73,13 @@ throun_ui <- function(id) {
         
         mainPanel(
             tabsetPanel(
-                type = "tabs",
-                tabPanel("Myndrit", 
-                         plotlyOutput(NS(id, "throun_plot"), height = 700, width = "100%") |> withSpinner()),
-                tabPanel("Tafla", DTOutput(NS(id, "throun_tafla")))
+                tabPanel(
+                    "Myndrit", 
+                    plotlyOutput(NS(id, "throun_plot"), height = 500, width = "100%") |> withSpinner()
+                ),
+                tabPanel(
+                    "Tafla",
+                    DTOutput(NS(id, "throun_tafla")))
             )
             
         )
@@ -91,7 +93,7 @@ throun_ui <- function(id) {
 
 throun_server <- function(id) {
     moduleServer(id, function(input, output, session) {
-    
+        
         
         ##### Make the dataframe used in the plot and table ######
         

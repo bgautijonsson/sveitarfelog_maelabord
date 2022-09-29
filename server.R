@@ -1,4 +1,4 @@
-function(input, output) {
+function(input, output, session) {
     
     
     
@@ -12,5 +12,8 @@ function(input, output) {
     ##### VIÐMIÐ #####
     vidmid_server("vidmid")
     
+    
+    #### HAFÐU SAMBAND #### 
+    hafdusamband_ui("hafdusamband")
     
 }

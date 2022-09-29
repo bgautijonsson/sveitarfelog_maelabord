@@ -54,12 +54,13 @@ make_vidmid_ggplot <- function(input) {
         scale_colour_brewer(type = "qual", palette = "Set1") +
         facet_grid(name ~ sveitarfelag, scales = "free_y") +
         theme(legend.position = "none", 
+              plot.title = element_text(size = 12),
               panel.spacing.y = unit(0.02, units= "npc"),
               strip.placement = "outside",
               strip.text = element_text(margin = margin(t = 5, r = 10, b = 5, l = 10), 
                                         hjust = 0.5,
                                         vjust = 0.5, 
-                                        size = 10)) +
+                                        size = 8)) +
         labs(x = NULL,
              y = NULL,
              title = str_c("Hvernig gengur sveitarfélögum að standast viðmið Eftirlitsnefndar með fjármálum sveitarfélaga (", input$hluti,")?"),
@@ -76,24 +77,14 @@ make_vidmid_ggplotly <- function(vidmid_ggplot, input) {
     ggplotly(
         vidmid_ggplot,
         tooltip = "text",
-        height = 1200,
-        width = 1200,
     ) |> 
         layout(
-            title = list(
-                y = 0.95, yanchor = "top",
-                x = 0, xref = "paper",
-                font = list(
-                    size = 14
-                )
-            ),
             margin = list(
                 t = 105,
                 r = 40,
-                b = 110,
+                b = 0,
                 l = 0
             ),
-            autosize = FALSE,
             annotations = list(
                 list(x = 1, xanchor = "right", xref = "paper",
                      y = -0.05, yanchor = "bottom", yref = "paper",

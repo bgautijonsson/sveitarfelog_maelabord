@@ -17,6 +17,8 @@ library(bslib)
 library(thematic)
 library(shinycssloaders)
 library(feather)
+library(shinyWidgets)
+library(metill)
 
 shinyOptions(plot.autocolor = TRUE)
 
@@ -29,20 +31,44 @@ d <- read_feather("data/arsreikningagogn.feather")
 # This is pasted into the sidebar on each page
 sidebar_info <- paste0(
     br(" "),
-    br(" "),
     h5("Höfundur:"),
     p("Brynjólfur Gauti Guðrúnar Jónsson"),
-    HTML("<a href='https://github.com/bgautijonsson/sveitarfelog_maelabord'> Kóði og gögn </a>")
+    HTML("<a href='https://github.com/bgautijonsson/sveitarfelog_maelabord' target='_top'> Kóði og gögn </a><br>")
 )
 # This is the caption for plots
-caption <- "Mynd var fengin frá: https://www.bggj.is/sveitarfelog"
+caption <- ""
 
 ##### THEMES #####
 # Making a light and dark theme in case I want to offer the option later
-light <- bs_theme(bootswatch = "flatly", primary = "#08306b")
-dark <- bs_theme(bootswatch = "superhero", primary = "#08306b")
-theme_set(theme_half_open(font_size = 12))
-thematic_shiny()
+theme_set(
+    theme_metill() +
+        theme(legend.text = element_text(size = 11),
+              legend.spacing = unit(0.001, units = "npc"),
+              legend.key.width = unit(0.001, units = "npc"))
+    )
+
+
+
+bs_global_theme(
+    bootswatch = "flatly"
+)
+
+bs_global_add_variables(
+    primary = "#484D6D",
+    secondary = "#969696",
+    success = "#969696",
+    # danger = "#FF8CC6",
+    # info = "#FF8CC6",
+    light = "#faf9f9",
+    dark = "#484D6D",
+    bg = "#faf9f9",
+    fg = "#737373",
+    "body-bg" = "#faf9f9",
+    base_font = "Lato",
+    heading_font = "Segoe UI",
+    "navbar-brand-font-family" = "Playfair Display",
+    code_font = "SFMono-Regular"
+)
 
 ##### List of all outcome variables #####
 #  To be used by functions in utils.R

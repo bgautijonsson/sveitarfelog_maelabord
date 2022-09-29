@@ -1,0 +1,28 @@
+/*-- scss:defaults --*/
+/*-- scss:rules --*/
+header.quarto-title-block.default .quarto-title .title {
+  color: #ffffff;
+  font-family: "Playfair Display";
+  font-size: 3rem;
+}
+
+div.quarto-post .listing-categories .listing-category {
+  color: #6c757d;
+  border: solid 1px #dee2e6;
+  border-radius: .25rem;
+  text-transform: uppercase;
+  font-size: .65em;
+  padding-left: .5em;
+  padding-right: .5em;
+  padding-top: .15em;
+  padding-bottom: .15em;
+  cursor: pointer;
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+
+.quarto-listing-category .category {
+  font-size: 0.7rem;
+  cursor: pointer;
+  color: #525252;
+}

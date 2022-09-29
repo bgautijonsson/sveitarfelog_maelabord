@@ -53,7 +53,7 @@ adjust_for_inflation <- function(data, y_name, verdlag, ar_fra) {
         if (verdlag == "Verðlag hvers árs") {
             return(data)
         } else {
-            return(data |> mutate(y = y / visitala_2021))
+            return(data |> mutate(y = y / cpi))
         }
         
     } else if (y_name %in% c("Skuldaaukning")) {
@@ -65,7 +65,7 @@ adjust_for_inflation <- function(data, y_name, verdlag, ar_fra) {
         } else {
             return(data |> 
                        group_by(sveitarfelag) |> 
-                       mutate(y = (y / visitala_2021) / (y[ar == ar_fra] / visitala_2021[ar == ar_fra]) - 1) |> 
+                       mutate(y = (y / cpi) / (y[ar == ar_fra] / cpi[ar == ar_fra]) - 1) |> 
                        ungroup())
         }
     } else {
@@ -81,10 +81,10 @@ make_x_scale <- function(y_name) {
         "Framlegð sem hlutfall af tekjum (kjörtímabil í heild)" = scale_x_continuous(labels = label_percent()),
         "Handbært fé per íbúi" = scale_x_continuous(label = label_number(suffix = " kr"), 
                                                     breaks = c(0, 5e5, 1e6, 2e6, 3e6)),
-        "Jöfnunarsjóðsframlög per íbúi" = scale_x_continuous(label = label_number(suffix = " kr"), limits = c(0, NA), expand = expansion()),
-        "Jöfnunarsjóðsframlög sem hlutfall af skatttekjum" = scale_x_continuous(labels = label_percent(), limits = c(0, NA), expand = expansion()),
-        "Launa- og launatengd gjöld per íbúi" = scale_x_continuous(label = label_number(suffix = " kr"), limits = c(0, NA), expand = expansion()),
-        "Launa- og launatengd gjöld sem hlutfall af útgjöldum" = scale_x_continuous(labels = label_percent(), limits = c(0, NA), expand = expansion()),
+        "Jöfnunarsjóðsframlög per íbúi" = scale_x_continuous(label = label_number(suffix = " kr"), limits = c(0, NA), expand = expansion(mult = 0.01)),
+        "Jöfnunarsjóðsframlög sem hlutfall af skatttekjum" = scale_x_continuous(labels = label_percent(), limits = c(0, NA), expand = expansion(mult = 0.01)),
+        "Launa- og launatengd gjöld per íbúi" = scale_x_continuous(label = label_number(suffix = " kr"), limits = c(0, NA), expand = expansion(mult = 0.01)),
+        "Launa- og launatengd gjöld sem hlutfall af útgjöldum" = scale_x_continuous(labels = label_percent(), limits = c(0, NA), expand = expansion(mult = 0.01)),
         "Nettó jöfnunarsjóðsframlög per íbúi" = scale_x_continuous(label = label_number(suffix = " kr")),
         "Nettóskuldir sem hlutfall af tekjum" = scale_x_continuous(labels = label_percent(), limits = c(NA, NA), expand = expansion(mult = 0.01)),
         "Rekstrarniðurstaða per íbúi (kjörtímabil í heild)" = scale_x_continuous(label = label_number(suffix = " kr")),

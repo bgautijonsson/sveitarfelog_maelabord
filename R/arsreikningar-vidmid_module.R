@@ -3,7 +3,6 @@ vidmid_ui <- function(id) {
     sidebarLayout(
         sidebarPanel(
             width = 3,
-            tags$style(type="text/css", "body {padding-top: 80px;}"),
             selectInput(
                 inputId = NS(id, "sveitarfelag"),
                 label = "Sveitarfélag",
@@ -33,7 +32,7 @@ vidmid_ui <- function(id) {
         
         
         mainPanel(
-            plotlyOutput(NS(id, "plot_vidmid"), height = 1200, width = 1200) |> withSpinner()
+            plotlyOutput(NS(id, "plot_vidmid"), height = 900, width = "100%") |> withSpinner()
         )
     )
     

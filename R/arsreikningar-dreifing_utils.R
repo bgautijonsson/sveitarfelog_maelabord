@@ -35,42 +35,32 @@ make_dreifing_ggplot <- function(dreifing_df, input) {
         coords +
         theme(legend.position = "none",
               axis.text.y = element_markdown(),
-              plot.margin = margin(t = 5, r = 15, b = 5, l = 5)) +
+              plot.title = element_text(size = 14)) +
         labs(x = NULL,
              y = NULL,
              col = NULL,
              title = str_c(input$y_var, " (", input$hluti, ")"),
              subtitle = subtitles,
-             caption = caption)
+             caption = caption) +
+        coord_cartesian(clip = "off")
 }
 
 
 make_dreifing_ggplotly <- function(dreifing_ggplot, input) {
     ggplotly(
         dreifing_ggplot,
-        tooltip = "text",
-        height = 1200,
-        width = 1000
+        tooltip = "text"
     ) |> 
         layout(
-            title = list(
-                y = 0.95, yanchor = "top",
-                x = 0, xref = "paper"
-            ),
+            hoverlabel  = list(align = "left"),
             margin = list(
                 t = 105,
                 r = 0,
-                b = 110,
+                b = 0,
                 l = 0
-            ),
-            autosize = FALSE,
-            annotations = list(
-                list(x = 1, xanchor = "right", xref = "paper",
-                     y = -0.05, yanchor = "bottom", yref = "paper",
-                     showarrow = FALSE,
-                     text = caption)
             )
-        )
+        ) |> 
+        config(displayModeBar = FALSE)
 }
 
 make_dreifing_table <- function(dreifing_df, input) {
