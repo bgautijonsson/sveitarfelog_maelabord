@@ -32,7 +32,9 @@ make_throun_ggplot <- function(throun_df, input) {
         y_scale +
         scale_colour_brewer(type = "qual", palette = "Set1") +
         coords +
-        theme(legend.position = "none") +
+        theme(legend.position = "right",
+              legend.box.margin = margin(),
+              plot.margin = margin()) +
         labs(x = NULL,
              y = NULL,
              col = NULL,
@@ -89,9 +91,13 @@ make_throun_plotly <- function(throun_plot, input) {
             margin = list(
                 t = 105,
                 r = 0,
-                b = 0,
+                b = 100,
                 l = 0
-            )
+            ),
+            legend = list(
+                orientation = "h"
+            ),
+            dragmode = FALSE
         ) |> 
         config(displayModeBar = FALSE)
 }
