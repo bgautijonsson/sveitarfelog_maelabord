@@ -75,7 +75,7 @@ throun_ui <- function(id) {
             tabsetPanel(
                 tabPanel(
                     "Myndrit", 
-                    plotlyOutput(NS(id, "throun_plot"), height = 500, width = "100%") |> withSpinner()
+                    plotlyOutput(NS(id, "throun_plot"), height = 700, width = "100%") |> withSpinner()
                 ),
                 tabPanel(
                     "Tafla",
