@@ -4,7 +4,7 @@
 
 Hér notum við rekstrar- og efnahagsreikninga sveitarfélaga frá [Sambandi Íslenskra Sveitarfélaga](https://www.samband.is/verkefnin/fjarmal/talnaefni/arsreikningar-sveitarfelaga/)
 
-Fyrir úrvinnslu tengdri viðmiðum eftirlitsnefndar með fjármálum sveitarfélaganna notum við skilgreiningar á lykiltölum úr [Reglugerð um fjárhagsleg viðmið og eftirlit með fjármálum sveitarfélaga.](https://island.is/reglugerdir/nr/0502-2012) og fæ viðmiðin frá [ársskýrslum eftirslitsnefndar](https://www.stjornarradid.is/verkefni/sveitarstjornir-og-byggdamal/sveitarstjornarmal/fjarmal-sveitarfelaga/eftirlitsnefnd-med-fjarmalum-sveitarfelaga/)
+Fyrir úrvinnslu tengdri viðmiðum eftirlitsnefndar með fjármálum sveitarfélaganna notum við skilgreiningar á lykiltölum úr [Reglugerð um fjárhagsleg viðmið og eftirlit með fjármálum sveitarfélaga](https://island.is/reglugerdir/nr/0502-2012) og fáum viðmiðin frá [ársskýrslum eftirslitsnefndar](https://www.stjornarradid.is/verkefni/sveitarstjornir-og-byggdamal/sveitarstjornarmal/fjarmal-sveitarfelaga/eftirlitsnefnd-med-fjarmalum-sveitarfelaga/)
 
 
 # Gögn
