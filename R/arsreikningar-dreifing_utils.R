@@ -17,7 +17,7 @@ make_dreifing_ggplot <- function(dreifing_df, input) {
                text = text_tooltip_throun(sveitarfelag, y, ar, input$y_var),
                sveitarfelag = case_when(sveitarfelag == input$vidmid ~ str_c("<b style='color:#2171b5'>", sveitarfelag, " (Til ", ar, ")", "</b>"),
                                         sveitarfelag == "Heild" ~ str_c("<b style='color:#b2182b'>", sveitarfelag, " (Til ", ar, ")", "</b>"),
-                                        TRUE ~ str_c(sveitarfelag, " (Til ", ar, ")")),
+                                        TRUE ~ str_c(sveitarfelag, " (", ar, ")")),
                sveitarfelag = fct_reorder(sveitarfelag, y))
     
     x_scale <- make_x_scale(input$y_var)
